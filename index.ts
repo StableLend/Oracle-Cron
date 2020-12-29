@@ -14,17 +14,29 @@ tezos.setProvider({ signer: new InMemorySigner('edskRf6hntyzJaC4Kv4ywGgPRVV2M12u
 
 const ApiEndpoints = [
     'https://api.coinbase.com/v2/prices/XTZ-USD/sell',
-    'https://api.coinbase.com/v2/prices/XTZ-EUR/sell',
-    'https://api.coinbase.com/v2/prices/XTZ-GBP/sell',
-    'https://api.coinbase.com/v2/prices/XTZ-JPY/sell',
+    // 'https://api.coinbase.com/v2/prices/XTZ-EUR/sell',
+    // 'https://api.coinbase.com/v2/prices/XTZ-GBP/sell',
+    // 'https://api.coinbase.com/v2/prices/XTZ-JPY/sell',
+]
+
+const SmartContract = [
+
 ]
 
 async function UpdateOracle(endpoint:string) {
 
+
+   
     const response = await axios.get(endpoint);
 
     const amount = Math.floor(response.data.data.amount * 100)
     console.log(amount)
+
+    var contract = await tezos.contract.at("KT1J9gYtCMeYCJxL63DUmB5ETyXQMaXFWD4B");
+
+    var operation = await contract.methods.feedData(amount).send();
+
+    await operation.confirmation();
 
 }
 

@@ -47,13 +47,11 @@ tezos.setProvider({ signer: new signer_1.InMemorySigner('edskRf6hntyzJaC4Kv4ywGg
 //   .catch((error) => console.log(JSON.stringify(error)));
 var ApiEndpoints = [
     'https://api.coinbase.com/v2/prices/XTZ-USD/sell',
-    'https://api.coinbase.com/v2/prices/XTZ-EUR/sell',
-    'https://api.coinbase.com/v2/prices/XTZ-GBP/sell',
-    'https://api.coinbase.com/v2/prices/XTZ-JPY/sell',
 ];
+var SmartContract = [];
 function UpdateOracle(endpoint) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, amount;
+        var response, amount, contract, operation;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, axios.get(endpoint)];
@@ -61,6 +59,15 @@ function UpdateOracle(endpoint) {
                     response = _a.sent();
                     amount = Math.floor(response.data.data.amount * 100);
                     console.log(amount);
+                    return [4 /*yield*/, tezos.contract.at("KT1J9gYtCMeYCJxL63DUmB5ETyXQMaXFWD4B")];
+                case 2:
+                    contract = _a.sent();
+                    return [4 /*yield*/, contract.methods.feedData(amount).send()];
+                case 3:
+                    operation = _a.sent();
+                    return [4 /*yield*/, operation.confirmation()];
+                case 4:
+                    _a.sent();
                     return [2 /*return*/];
             }
         });
