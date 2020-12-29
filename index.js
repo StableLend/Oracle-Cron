@@ -41,15 +41,22 @@ var signer_1 = require("@taquito/signer");
 var axios = require('axios');
 var tezos = new taquito_1.TezosToolkit('https://delphinet.smartpy.io');
 tezos.setProvider({ signer: new signer_1.InMemorySigner('edskRf6hntyzJaC4Kv4ywGgPRVV2M12ubX5GkN8NxrmpXzuqBRmeppq3WhUtepahhnRRAeMQ1H44psNLmAC2M58R1A8WG5A4eD') });
-tezos.tz
-    .getBalance('tz1ZS1rEYHPihHLzB3AEfgDkePqfzr1bk9ya')
-    .then(function (balance) { return console.log(balance.toNumber() / 1000000 + " \uA729"); })["catch"](function (error) { return console.log(JSON.stringify(error)); });
-function GetData() {
+// tezos.tz
+//   .getBalance('tz1RNehExNb532ymrnFE5tVk1EcX9sUg5JKg')
+//   .then((balance) => console.log(`${balance.toNumber() / 1000000} ꜩ`))
+//   .catch((error) => console.log(JSON.stringify(error)));
+var ApiEndpoints = [
+    'https://api.coinbase.com/v2/prices/XTZ-USD/sell',
+    'https://api.coinbase.com/v2/prices/XTZ-EUR/sell',
+    'https://api.coinbase.com/v2/prices/XTZ-GBP/sell',
+    'https://api.coinbase.com/v2/prices/XTZ-JPY/sell',
+];
+function UpdateOracle(endpoint) {
     return __awaiter(this, void 0, void 0, function () {
         var response, amount;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, axios.get("https://api.coinbase.com/v2/prices/XTZ-USD/sell")];
+                case 0: return [4 /*yield*/, axios.get(endpoint)];
                 case 1:
                     response = _a.sent();
                     amount = Math.floor(response.data.data.amount * 100);
@@ -59,4 +66,6 @@ function GetData() {
         });
     });
 }
-GetData();
+ApiEndpoints.forEach(function (element) {
+    UpdateOracle(element);
+});
