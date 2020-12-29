@@ -7,23 +7,22 @@ const tezos = new TezosToolkit('https://delphinet.smartpy.io');
 
 tezos.setProvider({ signer: new InMemorySigner('edskRf6hntyzJaC4Kv4ywGgPRVV2M12ubX5GkN8NxrmpXzuqBRmeppq3WhUtepahhnRRAeMQ1H44psNLmAC2M58R1A8WG5A4eD') });
 
-// tezos.tz
-//   .getBalance('tz1RNehExNb532ymrnFE5tVk1EcX9sUg5JKg')
-//   .then((balance) => console.log(`${balance.toNumber() / 1000000} ꜩ`))
-//   .catch((error) => console.log(JSON.stringify(error)));
 
 const ApiEndpoints = [
     'https://api.coinbase.com/v2/prices/XTZ-USD/sell',
-    // 'https://api.coinbase.com/v2/prices/XTZ-EUR/sell',
-    // 'https://api.coinbase.com/v2/prices/XTZ-GBP/sell',
-    // 'https://api.coinbase.com/v2/prices/XTZ-JPY/sell',
+    'https://api.coinbase.com/v2/prices/XTZ-EUR/sell',
+    'https://api.coinbase.com/v2/prices/XTZ-GBP/sell',
+    'https://api.coinbase.com/v2/prices/XTZ-JPY/sell',
 ]
 
 const SmartContract = [
-
+    'KT1J9gYtCMeYCJxL63DUmB5ETyXQMaXFWD4B',
+    'KT1Tj1zeVtXSQveYtY1sVEEomiymLadZi11k',
+    'KT1TQiQCVxXicS38iQu7TBvFLcKhAewAstPY',
+    'KT1WpZxUuLNxPJEy7V7fgfTSSbroucDxuW6s'
 ]
 
-async function UpdateOracle(endpoint:string) {
+async function UpdateOracle(endpoint:string, address:string) {
 
 
    
@@ -32,7 +31,7 @@ async function UpdateOracle(endpoint:string) {
     const amount = Math.floor(response.data.data.amount * 100)
     console.log(amount)
 
-    var contract = await tezos.contract.at("KT1J9gYtCMeYCJxL63DUmB5ETyXQMaXFWD4B");
+    var contract = await tezos.contract.at(address);
 
     var operation = await contract.methods.feedData(amount).send();
 
@@ -40,7 +39,5 @@ async function UpdateOracle(endpoint:string) {
 
 }
 
-ApiEndpoints.forEach(element => {
-    
-    UpdateOracle(element);
-});
+var index = 3
+UpdateOracle(ApiEndpoints[index],SmartContract[index])
